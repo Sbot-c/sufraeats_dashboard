@@ -5,39 +5,21 @@ import plotly.express as px
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-# ==========================================
-# PAGE CONFIGURATION & THEME
-# ==========================================
-st.set_page_config(
-    page_title="SufraEats Business Intelligence Hub",
-    page_icon="🍔",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)  # ✅ Fixed line 6: Removed the invalid 'unsafe_scale' argument completely!
-
-# Custom CSS styling for a polished board presentation look
-st.markdown("""
-<style>
-    .reportview-container { background: #f5f7f9; }
-    .main-metric-box {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        border-left: 5px solid #ff4b4b;
-    }
-</style>
-""", unsafe_allow_html=True)
+import os  # 🌟 Make sure to add this import at the very top of your app.py file!
 
 # ==========================================
 # DATA LOADING & CACHING PIPELINE
 # ==========================================
-@st.cache  # ✅ Fixed: Safe legacy decorator compatibility for your server instance
+@st.cache_data  
 def load_and_clean_data():
-    # 1. Load data
-    orders = pd.read_csv("sufraeats_orders.csv")
-    restaurants = pd.read_csv("sufraeats_restaurants.csv")
+    # 🌟 Dynamic path resolver: finds the folder where app.py is located
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    orders_path = os.path.join(BASE_DIR, "sufraeats_orders.csv")
+    restaurants_path = os.path.join(BASE_DIR, "sufraeats_restaurants.csv")
+
+    # 1. Load data using the absolute dynamic paths
+    orders = pd.read_csv(orders_path)
+    restaurants = pd.read_csv(restaurants_path)
     
     # 2. Text Standardization
     restaurants['zone'] = restaurants['zone'].astype(str).str.strip().str.lower()
@@ -98,7 +80,6 @@ def load_and_clean_data():
     df_clean['is_ramadan'] = df_clean['date'].between('2025-02-28', '2025-03-29')
     
     return df_clean
-
 # Initialize Data Workspace
 try:
     df_clean = load_and_clean_data()
