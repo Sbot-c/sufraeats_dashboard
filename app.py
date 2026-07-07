@@ -23,11 +23,39 @@ SUFRA_CRIMSON  = "#FF4D4D" # Punchy brand crimson that shines on dark background
 SAFFRON_GOLD   = "#FFB020" # Warm gold accent representing premium Dubai hospitality
 MINT_GARNISH   = "#22C55E" # Vivid green for positive matrix returns
 
-# Injecting comprehensive dark interface CSS styles
+# Injecting comprehensive dark interface CSS styles including sidebar, multiselect tags, and header overrides
 st.markdown(f"""
 <style>
     /* Global App Overrides */
     .stApp {{ background-color: {DARK_BG}; color: {TEXT_MAIN}; }}
+    
+    /* 🌟 FIX: Top Blank Header Bar Styling */
+    header[data-testid="stHeader"] {{
+        background-color: {DARK_BG} !important;
+    }}
+    
+    /* 🌟 FIX: Left Sidebar Container Styling */
+    section[data-testid="stSidebar"] {{
+        background-color: #0E1731 !important;
+        border-right: 1px solid #232E52;
+    }}
+    section[data-testid="stSidebar"] .stMarkdown p, 
+    section[data-testid="stSidebar"] label {{
+        color: #94A3B8 !important;
+    }}
+    
+    /* 🌟 FIX: Left Filters (Multiselect Tags & Dropdowns) Styling */
+    div[data-baseweb="select"] {{
+        background-color: #151F3C !important;
+        border-radius: 8px;
+    }}
+    div[data-baseweb="tag"] {{
+        background-color: #2D395E !important;
+        border-radius: 6px;
+    }}
+    div[data-baseweb="tag"] span {{
+        color: {TEXT_MAIN} !important;
+    }}
     
     /* Elegant Dark Executive Cards */
     .board-card {{
@@ -297,7 +325,6 @@ elif page == "📈 Operational Velocities":
     with kpi4:
         st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#94A3B8; font-weight:600;'>8. CANCELLATION RATE</p><h2 style='margin:5px 0; color:{SUFRA_CRIMSON};'>{cancelled_rate:.2f}%</h2></div>", unsafe_allow_html=True)
     
-    # 🌟 FIXED: Removed raw HTML style text string from rendering as plain text!
     st.markdown("<div class='board-card'>", unsafe_allow_html=True)
     st.markdown("### 🍽️ 6. Market Demand Preference & Cuisine Performance Leader")
     rest_perf = df_filtered.groupby(['restaurant_name', 'cuisine']).agg(
