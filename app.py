@@ -9,7 +9,14 @@ import seaborn as sns
 # ==========================================
 # PAGE CONFIGURATION & THEME
 # ==========================================
-# Custom CSS styling for a polished look
+st.set_page_config(
+    page_title="SufraEats Business Intelligence Hub",
+    page_icon="🍔",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# Custom CSS styling for a polished board presentation look
 st.markdown("""
 <style>
     .reportview-container { background: #f5f7f9; }
@@ -21,25 +28,12 @@ st.markdown("""
         border-left: 5px solid #ff4b4b;
     }
 </style>
-""", unsafe_allow_html=True)  # 👈 Fixed this exact line here!
-# Custom CSS styling for a polished look
-st.markdown("""
-<style>
-    .reportview-container { background: #f5f7f9; }
-    .main-metric-box {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        border-left: 5px solid #ff4b4b;
-    }
-</style>
-""", unsafe_scale=True)
+""", unsafe_allow_html=True)  # 👈 Fixed: Cleaned up duplicate block and set parameter to HTML safe
 
 # ==========================================
 # DATA LOADING & CACHING PIPELINE
 # ==========================================
-@st.cache_data
+@st.cache  # 👈 Fixed: Updated decorator for backward compatibility with your legacy environment
 def load_and_clean_data():
     # 1. Load data
     orders = pd.read_csv("sufraeats_orders.csv")
@@ -105,7 +99,7 @@ def load_and_clean_data():
     
     return df_clean
 
-# Initialize Data
+# Initialize Data Workspace
 try:
     df_clean = load_and_clean_data()
 except Exception as e:
