@@ -16,16 +16,16 @@ st.set_page_config(
 )
 
 # 🎨 PREMIUM GOURMET DARK BOARDROOM PALETTE
-DARK_BG        = "#0B132B" # Sleek, luxurious dark matte boardroom background
-CARD_BG        = "#1C2541" # Rich navy-charcoal container beds
-SUFRA_CRIMSON  = "#FF4D4D" # Punchy brand crimson that shines on dark backgrounds
-SAFFRON_GOLD   = "#FFB020" # Warm gold accent representing premium Dubai hospitality
-MINT_GARNISH   = "#22C55E" # Vivid green for positive matrix returns
+DARK_BG        = "#0B132B" 
+CARD_BG        = "#1C2541" 
+SUFRA_CRIMSON  = "#FF4D4D" 
+SAFFRON_GOLD   = "#FFB020" 
+MINT_GARNISH   = "#22C55E" 
 
 # Injecting comprehensive dark interface CSS styles with strict white text overrides
 st.markdown(f"""
 <style>
-    /* 🌟 STRICT GLOBAL WHITE TEXT OVERRIDES */
+    /* STRICT GLOBAL WHITE TEXT OVERRIDES */
     .stApp, p, span, label, li, td, th, div, h1, h2, h3, h4 {{
         color: #FFFFFF !important;
         font-family: 'Inter', sans-serif !important;
@@ -45,12 +45,11 @@ st.markdown(f"""
         border-right: 1px solid #232E52;
     }}
     
-    /* Radio Button labels explicitly forced to White */
     section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p {{
         color: #FFFFFF !important;
     }}
     
-    /* Left Filters (Multiselect Tags & Dropdowns) Styling */
+    /* Left Filters Styling */
     div[data-baseweb="select"] {{
         background-color: #151F3C !important;
         border-radius: 8px;
@@ -76,12 +75,10 @@ st.markdown(f"""
         border-top: 5px solid {SUFRA_CRIMSON};
     }}
     
-    /* Custom Styling for Dataframes to prevent dark text on light backgrounds */
     .stDataFrame div {{
         color: #FFFFFF !important;
     }}
     
-    /* Overriding Streamlit Metric Component Visuals for Dark Mode */
     [data-testid="stMetricValue"] {{ font-size: 34px !important; font-weight: 800 !important; color: #FFFFFF !important; }}
     [data-testid="stMetricLabel"] {{ font-size: 13px !important; text-transform: uppercase; letter-spacing: 0.8px; color: #FFFFFF !important; font-weight: 600; }}
 </style>
@@ -99,7 +96,6 @@ def load_and_clean_data():
     orders = pd.read_csv(orders_path)
     restaurants = pd.read_csv(restaurants_path)
     
-    # Text Standardization
     restaurants['zone'] = restaurants['zone'].astype(str).str.strip().str.lower()
     restaurants['cuisine'] = restaurants['cuisine'].astype(str).str.strip().str.lower()
     
@@ -110,14 +106,11 @@ def load_and_clean_data():
         if col in orders.columns:
             orders[col] = orders[col].astype(str).str.strip().str.lower()
             
-    # Deduplication
     orders = orders.drop_duplicates(subset=['order_id'], keep='first')
     restaurants = restaurants.drop_duplicates(subset=['restaurant_id'], keep='first')
     
-    # Merging via Inner Join
     df_clean = pd.merge(orders, restaurants, on='restaurant_id', how='inner')
     
-    # Imputations & Anomalies Filtering
     df_clean['promo_code'] = df_clean['promo_code'].fillna('no promo').str.strip().str.lower()
     df_clean['discount_amount'] = df_clean['discount_amount'].fillna(0.0)
     
@@ -136,7 +129,6 @@ def load_and_clean_data():
     df_clean['is_cancelled'] = df_clean['order_status'] == 'cancelled'
     df_clean['is_refunded'] = df_clean['order_status'] == 'refunded'
     
-    # Financial Revenue Pipeline Calculations
     df_clean['realised_revenue'] = np.where(
         df_clean['is_completed'],
         (df_clean['basket_value'] * df_clean['commission_rate']) + df_clean['delivery_fee'],
@@ -161,7 +153,6 @@ except Exception as e:
     st.error(f"Error executing data loading pipeline: {e}. Make sure CSVs are pushed to GitHub in the same directory.")
     st.stop()
 
-# Global chart style override function to adjust dark theme backgrounds
 def apply_board_theme(fig):
     fig.update_layout(
         template="plotly_dark",
@@ -248,7 +239,7 @@ elif page == "👥 Target Customer Insights":
     st.title("👥 Cohort Demographics, Preferred Channels & Interfaces")
     st.markdown("---")
     
-    c1, c2 = st.columns(2)
+    c1, r1 = st.columns(2)
     with c1:
         st.markdown("<div class='board-card'>", unsafe_allow_html=True)
         cohort_counts = df_filtered['customer_type'].value_counts().reset_index()
@@ -265,7 +256,7 @@ elif page == "👥 Target Customer Insights":
         st.plotly_chart(fig1, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
         
-    with c2:
+    with r1:
         st.markdown("<div class='board-card'>", unsafe_allow_html=True)
         channel_counts = df_filtered['order_channel'].value_counts().reset_index()
         fig3 = go.Figure(data=[go.Pie(
@@ -353,8 +344,6 @@ elif page == "📈 Operational Velocities":
     rating_pivot = df_filtered.pivot_table(
         values='rating', index=['zone', 'restaurant_name'], columns='customer_type', aggfunc='mean'
     ).reset_index()
-    
-    # 🌟 Applying visual style rules to keep dataframe matrix layout aligned with white text
     st.dataframe(rating_pivot.style.format({'new': '{:.2f} ⭐', 'repeat': '{:.2f} ⭐'}), use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -412,17 +401,27 @@ elif page == "💰 Net Financial Performance":
         
     st.markdown("---")
     st.markdown("<div class='board-card'>", unsafe_allow_html=True)
-    st.markdown("### 7. Voucher Code ROI Analysis (Acquisition vs Subsidization Yield)")
-    promo_perf = df_filtered[df_filtered['promo_code'] != 'no promo'].groupby('promo_code').agg(
+    
+    # 🌟 UPDATED SECTION 7: Region-Wise Voucher Code ROI Analysis 
+    st.markdown("### 7. Region-Wise Voucher Code ROI Analysis (Acquisition vs Subsidization Yield)")
+    
+    # Grouping by both zone and promo_code to show geographical breakdown
+    promo_perf = df_filtered[df_filtered['promo_code'] != 'no promo'].groupby(['zone', 'promo_code']).agg(
         usages=('order_id', 'count'),
         total_discount_borne=('discount_amount', 'sum'),
         acquired_new_users=('customer_type', lambda x: (x == 'new').sum())
-    ).reset_index().sort_values(by='usages', ascending=False)
+    ).reset_index().sort_values(by=['zone', 'usages'], ascending=[True, False])
     
-    st.dataframe(promo_perf.style.format({'total_discount_borne': '{:,.2f} AED', 'usages': '{:,}', 'acquired_new_users': '{:,}'}), use_container_width=True)
+    st.dataframe(promo_perf.style.format({
+        'total_discount_borne': '{:,.2f} AED', 
+        'usages': '{:,}', 
+        'acquired_new_users': '{:,}'
+    }), use_container_width=True)
+    
     st.markdown(
-        "💡 **Strategic Sales Insight:** Keep marketing expenditure anchored on promo codes where the "
-        "`acquired_new_users` output is steep. If high voucher volumes map to a flat acquisition curve, "
-        "the campaign is simply eroding net profit by subsidizing natural, repeat customer behavior."
+        "💡 **Strategic Sales Insight:** Evaluate the geographic distribution of voucher parameters. "
+        "If a specific zone displays steep marketing discount burn with low relative `acquired_new_users`, "
+        "the campaign in that zone is simply degrading profit margins by subsidizing existing repeat customer behavior "
+        "rather than scaling new market pipelines."
     )
     st.markdown("</div>", unsafe_allow_html=True)
