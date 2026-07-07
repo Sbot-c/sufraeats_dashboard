@@ -15,37 +15,57 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 🎨 EXCLUSIVE BOARDROOM PALETTE VARIABLES
-SUFRA_CRIMSON  = "#C2185B" # Premium, deep food-brand crimson
-DEEP_SLATE     = "#0F172A" # High-end boardroom dark slate
-SAGE_MINT      = "#2E7D32" # Elegant emerald/mint for positive metrics
-MUTED_AMBER    = "#D97706" # Sophisticated amber for third-dimension splits
-SOFT_BG        = "#F8FAFC" # Ultra-clean slate-tinted white background
-CARD_BORDER    = "#E2E8F0" # Subtle division line color
+# 🎨 PREMIUM LUXURY BOARDROOM PALETTE
+SUFRA_CRIMSON  = "#E11D48" # High-vibrancy primary accent
+DEEP_SLATE     = "#0F172A" # Dark luxury corporate backgrounds
+METRIC_BG      = "#1E293B" # Soft slate for dark metric tiles
+SAGE_MINT      = "#10B981" # Safe green for growth/success
+MUTED_AMBER    = "#F59E0B" # Deep gold for warnings/secondary targets
+LIGHT_BG       = "#F8FAFC" # Clean, professional content backdrop
+BORDER_COLOR   = "#E2E8F0" # Crisp card boundaries
 
-# Custom CSS for a beautiful, premium corporate presentation
+# Custom CSS for executive presentation layout
 st.markdown(f"""
 <style>
-    /* Global Background and Typography */
-    .stApp {{ background-color: {SOFT_BG}; }}
-    h1, h2, h3, h4 {{ font-family: 'Inter', 'Segoe UI', Arial, sans-serif !important; color: {DEEP_SLATE} !important; font-weight: 700 !important; }}
+    /* Main Background layout setup */
+    .stApp {{ background-color: {LIGHT_BG}; }}
+    h1, h2, h3, h4 {{ font-family: 'Inter', system-ui, sans-serif !important; color: {DEEP_SLATE} !important; font-weight: 700 !important; }}
     
-    /* Elegant Boardroom Data Cards */
+    /* Premium Dropped Shadow Display Cards */
     .board-card {{
         background-color: #ffffff;
-        padding: 24px;
-        border-radius: 14px;
-        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
-        border: 1px solid {CARD_BORDER};
-        margin-bottom: 20px;
+        padding: 26px;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
+        border: 1px solid {BORDER_COLOR};
+        margin-bottom: 24px;
     }}
     .board-card-accent {{
-        border-top: 4px solid {SUFRA_CRIMSON};
+        border-left: 6px solid {SUFRA_CRIMSON};
     }}
     
-    /* Metric Improvements */
-    [data-testid="stMetricValue"] {{ font-size: 32px !important; font-weight: 800 !important; color: {DEEP_SLATE}; }}
-    [data-testid="stMetricLabel"] {{ font-size: 14px !important; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; }}
+    /* Dark Premium Metric Display Tiles */
+    .metric-tile {{
+        background-color: {METRIC_BG};
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid #334155;
+        text-align: center;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+    }}
+    .metric-tile p {{
+        margin: 0;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        font-weight: 700;
+        color: #94A3B8;
+        text-transform: uppercase;
+    }}
+    .metric-tile h2 {{
+        margin: 8px 0 0 0 !important;
+        font-size: 30px !important;
+        font-weight: 800 !important;
+    }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -123,13 +143,13 @@ except Exception as e:
     st.error(f"Error executing data loading pipeline: {e}. Make sure CSVs are pushed to GitHub in the same directory.")
     st.stop()
 
-# Helper function to ensure all board graphics share identical premium font & styling properties
+# Applies premium uniform styling across all board presentation charts
 def apply_board_theme(fig):
     fig.update_layout(
         template="plotly_white",
-        font=dict(family="Inter, Segoe UI, sans-serif", size=12, color=DEEP_SLATE),
-        title=dict(font=dict(size=16, color=DEEP_SLATE, weight='bold')),
-        margin=dict(t=50, b=40, l=40, r=40),
+        font=dict(family="Inter, system-ui, sans-serif", size=12, color=DEEP_SLATE),
+        title=dict(font=dict(size=15, color=DEEP_SLATE, weight='bold'), x=0.02),
+        margin=dict(t=60, b=50, l=50, r=50),
         hoverlabel=dict(bgcolor="white", font_size=13, font_family="Inter")
     )
     return fig
@@ -137,7 +157,7 @@ def apply_board_theme(fig):
 # ==========================================
 # SIDEBAR NAVIGATION & CONTROLS
 # ==========================================
-st.sidebar.markdown(f"<br><h2 style='text-align: center; color: {SUFRA_CRIMSON}; font-size: 24px;'>🍔 SufraEats Boardroom</h2>", unsafe_allow_html=True)
+st.sidebar.markdown(f"<br><h2 style='text-align: center; color: {SUFRA_CRIMSON}; font-size: 24px; letter-spacing: -0.5px;'>🍔 SufraEats Hub</h2>", unsafe_allow_html=True)
 page = st.sidebar.radio("Executive Deck Navigation:", [
     "📌 Expansion Strategy Mandate", 
     "👥 Target Customer Insights", 
@@ -146,7 +166,7 @@ page = st.sidebar.radio("Executive Deck Navigation:", [
 ])
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("<p style='font-size: 12px; font-weight: bold; text-transform: uppercase; color: #64748B;'>Global Filters</p>", unsafe_allow_html=True)
+st.sidebar.markdown("<p style='font-size: 11px; font-weight: bold; text-transform: uppercase; color: #64748B; letter-spacing: 1px;'>Global Presentation Filters</p>", unsafe_allow_html=True)
 selected_zones = st.sidebar.multiselect("Zone Focus:", options=df_clean['zone'].unique().tolist(), default=df_clean['zone'].unique().tolist())
 selected_cuisines = st.sidebar.multiselect("Cuisine Focus:", options=df_clean['cuisine'].unique().tolist(), default=df_clean['cuisine'].unique().tolist())
 
@@ -156,7 +176,7 @@ df_filtered = df_clean[(df_clean['zone'].isin(selected_zones)) & (df_clean['cuis
 # PAGE 1: EXPANSION STRATEGY MANDATE
 # ==========================================
 if page == "📌 Expansion Strategy Mandate":
-    st.title("🎯 Data-Driven Regional Expansion Framework")
+    st.title("🎯 Strategic Capital Expansion Framework")
     st.markdown("---")
     
     zone_perf = df_clean.groupby('zone').agg(
@@ -172,32 +192,30 @@ if page == "📌 Expansion Strategy Mandate":
     with col1:
         st.markdown(f"""
         <div class="board-card board-card-accent">
-            <h3 style='margin-top: 0;'>🏆 EXECUTING STRATEGY MANDATE</h3>
-            <p style='color: #475569;'>Based on multi-tiered dynamic imputation metrics and real bottom-line profit parameters, 
-            the executive recommendation is to concentrate your expansion capital inside:</p>
-            <h2 style='color: {SUFRA_CRIMSON}; margin: 10px 0; font-size: 36px; letter-spacing: -0.5px;'>{recommended_zone.upper()}</h2>
-            <hr style='border-color: {CARD_BORDER}; margin: 15px 0;'>
-            <table style='width: 100%; font-size: 14px; color: #475569;'>
+            <h3 style='margin-top: 0;'>🏆 STRATEGIC FOCUS LOCATION RECOMMENDED</h3>
+            <p style='color: #475569;'>Based on verified multi-tiered operational data and net profit calculations across 5 months, the optimal hub selection is:</p>
+            <h2 style='color: {SUFRA_CRIMSON}; margin: 15px 0; font-size: 38px; letter-spacing: -1px;'>{recommended_zone.upper()}</h2>
+            <hr style='border-color: {BORDER_COLOR}; margin: 18px 0;'>
+            <table style='width: 100%; font-size: 14px; color: #475569; border-spacing: 0 8px;'>
                 <tr><td><b>Net Profit Yield:</b></td><td style='text-align: right; color: {DEEP_SLATE}; font-weight: bold;'>{zone_perf[zone_perf['zone']==recommended_zone]['total_profit'].values[0]:,.2f} AED</td></tr>
                 <tr><td><b>Quality Benchmark Index:</b></td><td style='text-align: right; color: {DEEP_SLATE}; font-weight: bold;'>{zone_perf[zone_perf['zone']==recommended_zone]['avg_rating'].values[0]:.2f} ⭐</td></tr>
-                <tr><td><b>Logistical Fulfillment Time:</b></td><td style='text-align: right; color: {DEEP_SLATE}; font-weight: bold;'>{zone_perf[zone_perf['zone']==recommended_zone]['del_time'].values[0]:.1f} Mins</td></tr>
+                <tr><td><b>Logistical Delivery Time:</b></td><td style='text-align: right; color: {DEEP_SLATE}; font-weight: bold;'>{zone_perf[zone_perf['zone']==recommended_zone]['del_time'].values[0]:.1f} Mins</td></tr>
             </table>
         </div>
         """, unsafe_allow_html=True)
     with col2:
         st.markdown(f"""
-        <div class="board-card" style="height: 100%; background-color: {DEEP_SLATE}; color: #94A3B8;">
-            <h4 style='color: #FFFFFF !important; margin-top: 0;'>📊 Strategic Justification Framework</h4>
-            <p style='font-size: 14px; line-height: 1.6;'>Top-line order volumes or simple gross basket values can create dangerous false signals in delivery business models. 
-            A particular zone might register immense volumes while quietly eroding margins via aggressive discount voucher loops, 
-            recurrent refund liabilities, and high logistical drop-offs. 
-            Our architecture optimizes solely for protected capital retention—making <b>{recommended_zone.upper()}</b> the highest-yielding option.</p>
+        <div class="board-card" style="height: 100%; background: linear-gradient(135deg, {DEEP_SLATE} 0%, #1E293B 100%); color: #E2E8F0;">
+            <h4 style='color: #FFFFFF !important; margin-top: 0;'>📊 Strategic Justification Summary</h4>
+            <p style='font-size: 14px; line-height: 1.6; color: #94A3B8;'>Top-line indicators such as total orders or gross values are frequently deceptive in delivery business models. 
+            A zone can process significant volume while generating minimal net margin due to aggressive voucher marketing loops, high cancellation liabilities, and service friction. 
+            Our architecture optimizes strictly for <b>protected net revenue</b>, positioning <b>{recommended_zone.upper()}</b> as the highest-yielding operational territory.</p>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown("<div class='board-card'>", unsafe_allow_html=True)
     fig_zone_prof = px.bar(zone_perf, x='zone', y='total_profit', color='avg_rating',
-                           labels={'total_profit': 'Net Profit Yield (AED)', 'zone': 'Dubai Operational Territory', 'avg_rating': 'Avg Rating'},
+                           labels={'total_profit': 'Net Profit Yield (AED)', 'zone': 'Dubai Operating Zone', 'avg_rating': 'Avg Rating'},
                            title="Net Profit Contribution Margin by Territory vs Customer Experience Rating",
                            color_continuous_scale=[DEEP_SLATE, SUFRA_CRIMSON], text_auto=',.2f')
     fig_zone_prof.update_traces(textposition='outside', cliponaxis=False)
@@ -289,13 +307,15 @@ elif page == "📈 Operational Velocities":
     
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
     with kpi1:
-        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#64748B; font-weight:600;'>5. AVG DELIVERY TIME</p><h2 style='margin:5px 0; color:{DEEP_SLATE};'>{avg_del_time:.1f} Mins</h2></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='metric-tile'><p>5. Avg Delivery Time</p><h2 style='color:#FFFFFF;'>{avg_del_time:.1f} Min</h2></div>", unsafe_allow_html=True)
     with kpi2:
-        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#64748B; font-weight:600;'>8. SUCCESSFUL DELIVERY RATE</p><h2 style='margin:5px 0; color:{SAGE_MINT};'>{success_rate:.2f}%</h2></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='metric-tile'><p>8. Success Delivery Rate</p><h2 style='color:{SAGE_MINT};'>{success_rate:.2f}%</h2></div>", unsafe_allow_html=True)
     with kpi3:
-        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#64748B; font-weight:600;'>8. REFUNDED ORDER RATE</p><h2 style='margin:5px 0; color:{MUTED_AMBER};'>{refunded_rate:.2f}%</h2></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='metric-tile'><p>8. Refunded Order Rate</p><h2 style='color:{MUTED_AMBER};'>{refunded_rate:.2f}%</h2></div>", unsafe_allow_html=True)
     with kpi4:
-        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#64748B; font-weight:600;'>8. CANCELLATION RATE</p><h2 style='margin:5px 0; color:{SUFRA_CRIMSON};'>{cancelled_rate:.2f}%</h2></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='metric-tile'><p>8. Cancellation Rate</p><h2 style='color:{SUFRA_CRIMSON};'>{cancelled_rate:.2f}%</h2></div>", unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
     
     st.markdown("<div class='board-card'>", unsafe_allow_html=True)
     st.markdown("### 🍽️ 6. Merchant Dominance & Cuisine Preferences")
@@ -305,7 +325,9 @@ elif page == "📈 Operational Velocities":
     ).reset_index().sort_values(by='total_orders', ascending=False)
     
     top_merchant = rest_perf.iloc[0]
-    st.markdown(f"**Top Performing Asset:** The most preferred establishment is <b style='color:{SUFRA_CRIMSON};'>{top_merchant['restaurant_name'].upper()}</b> specializing in <b style='color:{DEEP_SLATE};'>{top_merchant['cuisine'].upper()}</b> with <b style='color:{SAGE_MINT};'>{top_merchant['total_orders']:,}</b> total finalized volume orders.")
+    
+    # 🌟 FIXED LINE: Added unsafe_allow_html=True so HTML formatting doesn't break into string text
+    st.markdown(f"**Top Performing Asset:** The most preferred establishment is <b style='color:{SUFRA_CRIMSON};'>{top_merchant['restaurant_name'].upper()}</b> specializing in <b style='color:{MUTED_AMBER};'>{top_merchant['cuisine'].upper()}</b> with <b style='color:{SAGE_MINT};'>{top_merchant['total_orders']:,}</b> total finalized volume orders.", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
     
     st.markdown("<div class='board-card'>", unsafe_allow_html=True)
@@ -337,7 +359,7 @@ elif page == "💰 Net Financial Performance":
     }), use_container_width=True)
     
     total_5m_profit = monthly_ledger['profit'].sum()
-    st.markdown(f"<h3 style='color:{SAGE_MINT} !important;'>📊 Total Consolidated 5-Month Realized Profit: {total_5m_profit:,.2f} AED</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='color:{SAGE_MINT} !important; margin-top: 15px;'>📊 Total Consolidated 5-Month Realized Profit: {total_5m_profit:,.2f} AED</h3>", unsafe_allow_html=True)
     
     highest_month = monthly_ledger.sort_values(by='total_orders', ascending=False).iloc[0]
     lowest_month = monthly_ledger.sort_values(by='total_orders', ascending=True).iloc[0]
