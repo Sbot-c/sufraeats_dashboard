@@ -9,13 +9,19 @@ import seaborn as sns
 # ==========================================
 # PAGE CONFIGURATION & THEME
 # ==========================================
-st.set_page_config(
-    page_title="SufraEats Business Intelligence Hub",
-    page_icon="🍔",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
+# Custom CSS styling for a polished look
+st.markdown("""
+<style>
+    .reportview-container { background: #f5f7f9; }
+    .main-metric-box {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border-left: 5px solid #ff4b4b;
+    }
+</style>
+""", unsafe_allow_html=True)  # 👈 Fixed this exact line here!
 # Custom CSS styling for a polished look
 st.markdown("""
 <style>
