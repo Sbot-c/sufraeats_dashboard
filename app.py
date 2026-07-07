@@ -307,4 +307,4 @@ elif page == "🌙 Ramadan & Temporal Surges":
     ).reset_index().sort_values(by='total_discounts_given', ascending=False)
     
     fig_promo = px.bar(promo_analysis, x='promo_code', y='total_realised_revenue',
-                       color='
+                       color=''
