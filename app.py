@@ -18,43 +18,49 @@ st.set_page_config(
 # 🎨 PREMIUM GOURMET DARK BOARDROOM PALETTE
 DARK_BG        = "#0B132B" # Sleek, luxurious dark matte boardroom background
 CARD_BG        = "#1C2541" # Rich navy-charcoal container beds
-TEXT_MAIN      = "#F8FAFC" # High-contrast crisp off-white for text readability
 SUFRA_CRIMSON  = "#FF4D4D" # Punchy brand crimson that shines on dark backgrounds
 SAFFRON_GOLD   = "#FFB020" # Warm gold accent representing premium Dubai hospitality
 MINT_GARNISH   = "#22C55E" # Vivid green for positive matrix returns
 
-# Injecting comprehensive dark interface CSS styles including sidebar, multiselect tags, and header overrides
+# Injecting comprehensive dark interface CSS styles with strict white text overrides
 st.markdown(f"""
 <style>
-    /* Global App Overrides */
-    .stApp {{ background-color: {DARK_BG}; color: {TEXT_MAIN}; }}
+    /* 🌟 STRICT GLOBAL WHITE TEXT OVERRIDES */
+    .stApp, p, span, label, li, td, th, div, h1, h2, h3, h4 {{
+        color: #FFFFFF !important;
+        font-family: 'Inter', sans-serif !important;
+    }}
     
-    /* 🌟 FIX: Top Blank Header Bar Styling */
+    /* Global App Background */
+    .stApp {{ background-color: {DARK_BG}; }}
+    
+    /* Top Blank Header Bar Styling */
     header[data-testid="stHeader"] {{
         background-color: {DARK_BG} !important;
     }}
     
-    /* 🌟 FIX: Left Sidebar Container Styling */
+    /* Left Sidebar Container Styling */
     section[data-testid="stSidebar"] {{
         background-color: #0E1731 !important;
         border-right: 1px solid #232E52;
     }}
-    section[data-testid="stSidebar"] .stMarkdown p, 
-    section[data-testid="stSidebar"] label {{
-        color: #94A3B8 !important;
+    
+    /* Radio Button labels explicitly forced to White */
+    section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p {{
+        color: #FFFFFF !important;
     }}
     
-    /* 🌟 FIX: Left Filters (Multiselect Tags & Dropdowns) Styling */
+    /* Left Filters (Multiselect Tags & Dropdowns) Styling */
     div[data-baseweb="select"] {{
         background-color: #151F3C !important;
         border-radius: 8px;
     }}
+    div[data-baseweb="select"] div {{
+        color: #FFFFFF !important;
+    }}
     div[data-baseweb="tag"] {{
         background-color: #2D395E !important;
         border-radius: 6px;
-    }}
-    div[data-baseweb="tag"] span {{
-        color: {TEXT_MAIN} !important;
     }}
     
     /* Elegant Dark Executive Cards */
@@ -70,12 +76,14 @@ st.markdown(f"""
         border-top: 5px solid {SUFRA_CRIMSON};
     }}
     
-    /* Standardizing Title Color Variables */
-    h1, h2, h3, h4 {{ color: {TEXT_MAIN} !important; font-family: 'Inter', sans-serif !important; }}
+    /* Custom Styling for Dataframes to prevent dark text on light backgrounds */
+    .stDataFrame div {{
+        color: #FFFFFF !important;
+    }}
     
     /* Overriding Streamlit Metric Component Visuals for Dark Mode */
-    [data-testid="stMetricValue"] {{ font-size: 34px !important; font-weight: 800 !important; color: {TEXT_MAIN} !important; }}
-    [data-testid="stMetricLabel"] {{ font-size: 13px !important; text-transform: uppercase; letter-spacing: 0.8px; color: #94A3B8 !important; font-weight: 600; }}
+    [data-testid="stMetricValue"] {{ font-size: 34px !important; font-weight: 800 !important; color: #FFFFFF !important; }}
+    [data-testid="stMetricLabel"] {{ font-size: 13px !important; text-transform: uppercase; letter-spacing: 0.8px; color: #FFFFFF !important; font-weight: 600; }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -159,8 +167,8 @@ def apply_board_theme(fig):
         template="plotly_dark",
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        font=dict(family="Inter, sans-serif", size=12, color=TEXT_MAIN),
-        title=dict(font=dict(size=15, color=TEXT_MAIN, weight='bold')),
+        font=dict(family="Inter, sans-serif", size=12, color="#FFFFFF"),
+        title=dict(font=dict(size=15, color="#FFFFFF", weight='bold')),
         margin=dict(t=50, b=40, l=40, r=40)
     )
     return fig
@@ -168,7 +176,7 @@ def apply_board_theme(fig):
 # ==========================================
 # SIDEBAR NAVIGATION & CONTROLS
 # ==========================================
-st.sidebar.markdown(f"<br><h2 style='text-align: center; color: {SUFRA_CRIMSON}; font-size: 26px; letter-spacing: -0.5px;'>🍔 SufraEats</h2><p style='text-align: center; font-size: 11px; color: #94A3B8; text-transform: uppercase; margin-top: -10px;'>Executive Intelligence Deck</p>", unsafe_allow_html=True)
+st.sidebar.markdown(f"<br><h2 style='text-align: center; color: {SUFRA_CRIMSON}; font-size: 26px; letter-spacing: -0.5px;'>🍔 SufraEats</h2><p style='text-align: center; font-size: 11px; color: #FFFFFF; text-transform: uppercase; margin-top: -10px;'>Executive Intelligence Deck</p>", unsafe_allow_html=True)
 page = st.sidebar.radio("Go to Slide:", [
     "📌 Expansion Strategy Mandate", 
     "👥 Target Customer Insights", 
@@ -177,7 +185,7 @@ page = st.sidebar.radio("Go to Slide:", [
 ])
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("<p style='font-size: 11px; font-weight: bold; text-transform: uppercase; color: #94A3B8; letter-spacing: 0.5px;'>Interactive Controls</p>", unsafe_allow_html=True)
+st.sidebar.markdown("<p style='font-size: 11px; font-weight: bold; text-transform: uppercase; color: #FFFFFF; letter-spacing: 0.5px;'>Interactive Controls</p>", unsafe_allow_html=True)
 selected_zones = st.sidebar.multiselect("Zone Focus Area:", options=df_clean['zone'].unique().tolist(), default=df_clean['zone'].unique().tolist())
 selected_cuisines = st.sidebar.multiselect("Cuisine Categories:", options=df_clean['cuisine'].unique().tolist(), default=df_clean['cuisine'].unique().tolist())
 
@@ -204,11 +212,11 @@ if page == "📌 Expansion Strategy Mandate":
         st.markdown(f"""
         <div class="board-card board-card-accent">
             <h3 style='margin-top: 0; color: {SUFRA_CRIMSON} !important;'>🏆 DATA MANDATE SELECTOR</h3>
-            <p style='color: #94A3B8;'>Optimizing for bottom-line margin retention and real platform profit parameters over 5 months, our analytics engine identifies the ideal investment hub location as:</p>
+            <p style='color: #FFFFFF;'>Optimizing for bottom-line margin retention and real platform profit parameters over 5 months, our analytics engine identifies the ideal investment hub location as:</p>
             <h2 style='color: {SUFRA_CRIMSON}; margin: 10px 0; font-size: 38px; letter-spacing: -1px;'>{recommended_zone.upper()}</h2>
             <hr style='border-color: #3A4766; margin: 15px 0;'>
-            <table style='width: 100%; font-size: 14px; color: #CBD5E1;'>
-                <tr><td><b>Net Realized Profit Yield:</b></td><td style='text-align: right; color: {TEXT_MAIN}; font-weight: bold;'>{zone_perf[zone_perf['zone']==recommended_zone]['total_profit'].values[0]:,.2f} AED</td></tr>
+            <table style='width: 100%; font-size: 14px; color: #FFFFFF;'>
+                <tr><td><b>Net Realized Profit Yield:</b></td><td style='text-align: right; color: #FFFFFF; font-weight: bold;'>{zone_perf[zone_perf['zone']==recommended_zone]['total_profit'].values[0]:,.2f} AED</td></tr>
                 <tr><td><b>Quality Baseline Index:</b></td><td style='text-align: right; color: {SAFFRON_GOLD}; font-weight: bold;'>{zone_perf[zone_perf['zone']==recommended_zone]['avg_rating'].values[0]:.2f} ⭐</td></tr>
                 <tr><td><b>Logistical Velocity Average:</b></td><td style='text-align: right; color: {MINT_GARNISH}; font-weight: bold;'>{zone_perf[zone_perf['zone']==recommended_zone]['del_time'].values[0]:.1f} Mins</td></tr>
             </table>
@@ -218,7 +226,7 @@ if page == "📌 Expansion Strategy Mandate":
         st.markdown(f"""
         <div class="board-card" style="height: 100%; background-color: #111827; border-color: #374151;">
             <h4 style='color: #FFFFFF !important; margin-top: 0;'>📊 Brand Health Optimization Logic</h4>
-            <p style='font-size: 14px; line-height: 1.6; color: #9CA3AF;'>Top-line order numbers or simple gross volume figures create dangerous illusions in high-frequency delivery markets. A specific district might show massive transaction counts while silently running at a deficit due to persistent discount promo loops, operational cancellation liabilities, and customer support refunds. 
+            <p style='font-size: 14px; line-height: 1.6; color: #FFFFFF;'>Top-line order numbers or simple gross volume figures create dangerous illusions in high-frequency delivery markets. A specific district might show massive transaction counts while silently running at a deficit due to persistent discount promo loops, operational cancellation liabilities, and customer support refunds. 
             SufraEats chooses <b>{recommended_zone.upper()}</b> because it successfully translates market demand into true corporate net value.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -317,13 +325,13 @@ elif page == "📈 Operational Velocities":
     
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
     with kpi1:
-        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#94A3B8; font-weight:600;'>5. AVG DELIVERY TIME</p><h2 style='margin:5px 0; color:{TEXT_MAIN};'>{avg_del_time:.1f} Mins</h2></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#FFFFFF; font-weight:600;'>5. AVG DELIVERY TIME</p><h2 style='margin:5px 0; color:#FFFFFF;'>{avg_del_time:.1f} Mins</h2></div>", unsafe_allow_html=True)
     with kpi2:
-        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#94A3B8; font-weight:600;'>8. SUCCESS DELIVERY RATE</p><h2 style='margin:5px 0; color:{MINT_GARNISH};'>{success_rate:.2f}%</h2></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#FFFFFF; font-weight:600;'>8. SUCCESS DELIVERY RATE</p><h2 style='margin:5px 0; color:{MINT_GARNISH};'>{success_rate:.2f}%</h2></div>", unsafe_allow_html=True)
     with kpi3:
-        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#94A3B8; font-weight:600;'>8. REFUNDED ORDER RATE</p><h2 style='margin:5px 0; color:{SAFFRON_GOLD};'>{refunded_rate:.2f}%</h2></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#FFFFFF; font-weight:600;'>8. REFUNDED ORDER RATE</p><h2 style='margin:5px 0; color:{SAFFRON_GOLD};'>{refunded_rate:.2f}%</h2></div>", unsafe_allow_html=True)
     with kpi4:
-        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#94A3B8; font-weight:600;'>8. CANCELLATION RATE</p><h2 style='margin:5px 0; color:{SUFRA_CRIMSON};'>{cancelled_rate:.2f}%</h2></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#FFFFFF; font-weight:600;'>8. CANCELLATION RATE</p><h2 style='margin:5px 0; color:{SUFRA_CRIMSON};'>{cancelled_rate:.2f}%</h2></div>", unsafe_allow_html=True)
     
     st.markdown("<div class='board-card'>", unsafe_allow_html=True)
     st.markdown("### 🍽️ 6. Market Demand Preference & Cuisine Performance Leader")
@@ -345,6 +353,8 @@ elif page == "📈 Operational Velocities":
     rating_pivot = df_filtered.pivot_table(
         values='rating', index=['zone', 'restaurant_name'], columns='customer_type', aggfunc='mean'
     ).reset_index()
+    
+    # 🌟 Applying visual style rules to keep dataframe matrix layout aligned with white text
     st.dataframe(rating_pivot.style.format({'new': '{:.2f} ⭐', 'repeat': '{:.2f} ⭐'}), use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
