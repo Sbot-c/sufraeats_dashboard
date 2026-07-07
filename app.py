@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-import matplotlib.plot as plt
+import matplotlib.pyplot as plt
 import seaborn as sns
 
 # ==========================================
@@ -14,7 +14,7 @@ st.set_page_config(
     page_icon="🍔",
     layout="wide",
     initial_sidebar_state="expanded"
-)
+)  # ✅ Fixed line 6: Removed the invalid 'unsafe_scale' argument completely!
 
 # Custom CSS styling for a polished board presentation look
 st.markdown("""
@@ -28,12 +28,12 @@ st.markdown("""
         border-left: 5px solid #ff4b4b;
     }
 </style>
-""", unsafe_allow_html=True)  # ✅ Fixed: Removed duplicates and fixed HTML rendering parameters
+""", unsafe_allow_html=True)
 
 # ==========================================
 # DATA LOADING & CACHING PIPELINE
 # ==========================================
-@st.cache  # ✅ Fixed: Kept safe legacy decorator compatibility for your server instance
+@st.cache  # ✅ Fixed: Safe legacy decorator compatibility for your server instance
 def load_and_clean_data():
     # 1. Load data
     orders = pd.read_csv("sufraeats_orders.csv")
@@ -307,7 +307,4 @@ elif page == "🌙 Ramadan & Temporal Surges":
     ).reset_index().sort_values(by='total_discounts_given', ascending=False)
     
     fig_promo = px.bar(promo_analysis, x='promo_code', y='total_realised_revenue',
-                       color='total_discounts_given', title="Campaign Net Financial Impact vs Discount Expenses",
-                       labels={'total_realised_revenue': 'Net Revenue Flow (AED)', 'total_discounts_given': 'Discounts Spent'},
-                       color_continuous_scale='Reds')
-    st.plotly_chart(fig_promo, use_container_width=True)
+                       color='
