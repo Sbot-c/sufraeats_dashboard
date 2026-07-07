@@ -15,37 +15,39 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 🎨 GOURMET FOOD-TECH BRAND PALETTE
-SUFRA_CRIMSON  = "#D32F2F" # Rich, appetizing primary brand crimson
-SAFFRON_GOLD   = "#F59E0B" # Warm, premium accent gold representing Dubai luxury
-CHARCOAL_STEAK = "#212121" # Sleek, ultra-dark charcoal for strong text contrast
-MINT_GARNISH   = "#1B5E20" # Deep, classy herbal green for positive growth metrics
-CREAM_BG       = "#FAFAFA" # Smooth, clean background to eliminate boardroom glare
-CARD_BORDER    = "#E0E0E0" # Crisp, subtle framing borders
+# 🎨 PREMIUM GOURMET DARK BOARDROOM PALETTE
+DARK_BG        = "#0B132B" # Sleek, luxurious dark matte boardroom background
+CARD_BG        = "#1C2541" # Rich navy-charcoal container beds
+TEXT_MAIN      = "#F8FAFC" # High-contrast crisp off-white for text readability
+SUFRA_CRIMSON  = "#FF4D4D" # Punchy brand crimson that shines on dark backgrounds
+SAFFRON_GOLD   = "#FFB020" # Warm gold accent representing premium Dubai hospitality
+MINT_GARNISH   = "#22C55E" # Vivid green for positive matrix returns
 
-# Custom CSS for an incredibly appetizing and professional layout
+# Injecting comprehensive dark interface CSS styles
 st.markdown(f"""
 <style>
-    /* Global App Framework */
-    .stApp {{ background-color: {CREAM_BG}; }}
-    h1, h2, h3, h4 {{ font-family: 'Inter', 'Segoe UI', sans-serif !important; color: {CHARCOAL_STEAK} !important; font-weight: 700 !important; }}
+    /* Global App Overrides */
+    .stApp {{ background-color: {DARK_BG}; color: {TEXT_MAIN}; }}
     
-    /* Premium Drop-Shadow Cards */
+    /* Elegant Dark Executive Cards */
     .board-card {{
-        background-color: #ffffff;
+        background-color: {CARD_BG};
         padding: 24px;
         border-radius: 14px;
-        box-shadow: 0 4px 20px rgba(33, 33, 33, 0.03);
-        border: 1px solid {CARD_BORDER};
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        border: 1px solid #3A4766;
         margin-bottom: 20px;
     }}
     .board-card-accent {{
         border-top: 5px solid {SUFRA_CRIMSON};
     }}
     
-    /* Executive Metric Customization */
-    [data-testid="stMetricValue"] {{ font-size: 34px !important; font-weight: 800 !important; color: {CHARCOAL_STEAK}; }}
-    [data-testid="stMetricLabel"] {{ font-size: 13px !important; text-transform: uppercase; letter-spacing: 0.8px; color: #757575; font-weight: 600; }}
+    /* Standardizing Title Color Variables */
+    h1, h2, h3, h4 {{ color: {TEXT_MAIN} !important; font-family: 'Inter', sans-serif !important; }}
+    
+    /* Overriding Streamlit Metric Component Visuals for Dark Mode */
+    [data-testid="stMetricValue"] {{ font-size: 34px !important; font-weight: 800 !important; color: {TEXT_MAIN} !important; }}
+    [data-testid="stMetricLabel"] {{ font-size: 13px !important; text-transform: uppercase; letter-spacing: 0.8px; color: #94A3B8 !important; font-weight: 600; }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -123,21 +125,22 @@ except Exception as e:
     st.error(f"Error executing data loading pipeline: {e}. Make sure CSVs are pushed to GitHub in the same directory.")
     st.stop()
 
-# Helper function to inject brand theme settings globally into all charts
+# Global chart style override function to adjust dark theme backgrounds
 def apply_board_theme(fig):
     fig.update_layout(
-        template="plotly_white",
-        font=dict(family="Inter, Segoe UI, sans-serif", size=12, color=CHARCOAL_STEAK),
-        title=dict(font=dict(size=15, color=CHARCOAL_STEAK, weight='bold')),
-        margin=dict(t=50, b=40, l=40, r=40),
-        hoverlabel=dict(bgcolor="white", font_size=13)
+        template="plotly_dark",
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(family="Inter, sans-serif", size=12, color=TEXT_MAIN),
+        title=dict(font=dict(size=15, color=TEXT_MAIN, weight='bold')),
+        margin=dict(t=50, b=40, l=40, r=40)
     )
     return fig
 
 # ==========================================
 # SIDEBAR NAVIGATION & CONTROLS
 # ==========================================
-st.sidebar.markdown(f"<br><h2 style='text-align: center; color: {SUFRA_CRIMSON}; font-size: 26px; letter-spacing: -0.5px;'>🍔 SufraEats</h2><p style='text-align: center; font-size: 11px; color: #757575; text-transform: uppercase; margin-top: -10px;'>Executive Intelligence Deck</p>", unsafe_allow_html=True)
+st.sidebar.markdown(f"<br><h2 style='text-align: center; color: {SUFRA_CRIMSON}; font-size: 26px; letter-spacing: -0.5px;'>🍔 SufraEats</h2><p style='text-align: center; font-size: 11px; color: #94A3B8; text-transform: uppercase; margin-top: -10px;'>Executive Intelligence Deck</p>", unsafe_allow_html=True)
 page = st.sidebar.radio("Go to Slide:", [
     "📌 Expansion Strategy Mandate", 
     "👥 Target Customer Insights", 
@@ -146,7 +149,7 @@ page = st.sidebar.radio("Go to Slide:", [
 ])
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("<p style='font-size: 11px; font-weight: bold; text-transform: uppercase; color: #757575; letter-spacing: 0.5px;'>Interactive Filters</p>", unsafe_allow_html=True)
+st.sidebar.markdown("<p style='font-size: 11px; font-weight: bold; text-transform: uppercase; color: #94A3B8; letter-spacing: 0.5px;'>Interactive Controls</p>", unsafe_allow_html=True)
 selected_zones = st.sidebar.multiselect("Zone Focus Area:", options=df_clean['zone'].unique().tolist(), default=df_clean['zone'].unique().tolist())
 selected_cuisines = st.sidebar.multiselect("Cuisine Categories:", options=df_clean['cuisine'].unique().tolist(), default=df_clean['cuisine'].unique().tolist())
 
@@ -173,21 +176,21 @@ if page == "📌 Expansion Strategy Mandate":
         st.markdown(f"""
         <div class="board-card board-card-accent">
             <h3 style='margin-top: 0; color: {SUFRA_CRIMSON} !important;'>🏆 DATA MANDATE SELECTOR</h3>
-            <p style='color: #616161;'>Optimizing for bottom-line margin retention and real platform profit parameters over 5 months, our analytics engine identifies the ideal investment hub location as:</p>
+            <p style='color: #94A3B8;'>Optimizing for bottom-line margin retention and real platform profit parameters over 5 months, our analytics engine identifies the ideal investment hub location as:</p>
             <h2 style='color: {SUFRA_CRIMSON}; margin: 10px 0; font-size: 38px; letter-spacing: -1px;'>{recommended_zone.upper()}</h2>
-            <hr style='border-color: {CARD_BORDER}; margin: 15px 0;'>
-            <table style='width: 100%; font-size: 14px; color: #424242;'>
-                <tr><td><b>Net Realized Profit Yield:</b></td><td style='text-align: right; color: {CHARCOAL_STEAK}; font-weight: bold;'>{zone_perf[zone_perf['zone']==recommended_zone]['total_profit'].values[0]:,.2f} AED</td></tr>
-                <tr><td><b>Quality Baseline Index:</b></td><td style='text-align: right; color: {CHARCOAL_STEAK}; font-weight: bold;'>{zone_perf[zone_perf['zone']==recommended_zone]['avg_rating'].values[0]:.2f} ⭐</td></tr>
-                <tr><td><b>Logistical Velocity Average:</b></td><td style='text-align: right; color: {CHARCOAL_STEAK}; font-weight: bold;'>{zone_perf[zone_perf['zone']==recommended_zone]['del_time'].values[0]:.1f} Mins</td></tr>
+            <hr style='border-color: #3A4766; margin: 15px 0;'>
+            <table style='width: 100%; font-size: 14px; color: #CBD5E1;'>
+                <tr><td><b>Net Realized Profit Yield:</b></td><td style='text-align: right; color: {TEXT_MAIN}; font-weight: bold;'>{zone_perf[zone_perf['zone']==recommended_zone]['total_profit'].values[0]:,.2f} AED</td></tr>
+                <tr><td><b>Quality Baseline Index:</b></td><td style='text-align: right; color: {SAFFRON_GOLD}; font-weight: bold;'>{zone_perf[zone_perf['zone']==recommended_zone]['avg_rating'].values[0]:.2f} ⭐</td></tr>
+                <tr><td><b>Logistical Velocity Average:</b></td><td style='text-align: right; color: {MINT_GARNISH}; font-weight: bold;'>{zone_perf[zone_perf['zone']==recommended_zone]['del_time'].values[0]:.1f} Mins</td></tr>
             </table>
         </div>
         """, unsafe_allow_html=True)
     with col2:
         st.markdown(f"""
-        <div class="board-card" style="height: 100%; background-color: {CHARCOAL_STEAK}; color: #BDBDBD;">
+        <div class="board-card" style="height: 100%; background-color: #111827; border-color: #374151;">
             <h4 style='color: #FFFFFF !important; margin-top: 0;'>📊 Brand Health Optimization Logic</h4>
-            <p style='font-size: 14px; line-height: 1.6;'>Top-line order numbers or simple gross volume figures create dangerous illusions in high-frequency delivery markets. A specific district might show massive transaction counts while silently running at a deficit due to persistent discount promo loops, operational cancellation liabilities, and customer support refunds. 
+            <p style='font-size: 14px; line-height: 1.6; color: #9CA3AF;'>Top-line order numbers or simple gross volume figures create dangerous illusions in high-frequency delivery markets. A specific district might show massive transaction counts while silently running at a deficit due to persistent discount promo loops, operational cancellation liabilities, and customer support refunds. 
             SufraEats chooses <b>{recommended_zone.upper()}</b> because it successfully translates market demand into true corporate net value.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -219,7 +222,7 @@ elif page == "👥 Target Customer Insights":
             hole=.45,
             textinfo='label+percent',
             textposition='outside',
-            marker=dict(colors=[SUFRA_CRIMSON, SAFFRON_GOLD], line=dict(color='#ffffff', width=2))
+            marker=dict(colors=[SUFRA_CRIMSON, SAFFRON_GOLD], line=dict(color=CARD_BG, width=2))
         )])
         fig1.update_layout(title="1. Order Concentration Split: New vs. Repeat Base")
         fig1 = apply_board_theme(fig1)
@@ -234,7 +237,7 @@ elif page == "👥 Target Customer Insights":
             values=channel_counts['count'],
             textinfo='label+percent',
             textposition='outside',
-            marker=dict(colors=[SUFRA_CRIMSON, CHARCOAL_STEAK, SAFFRON_GOLD], line=dict(color='#ffffff', width=2))
+            marker=dict(colors=[SUFRA_CRIMSON, "#3A4766", SAFFRON_GOLD], line=dict(color=CARD_BG, width=2))
         )])
         fig3.update_layout(title="3. Distribution Channel Preference Share Matrix")
         fig3 = apply_board_theme(fig3)
@@ -249,7 +252,7 @@ elif page == "👥 Target Customer Insights":
         pay_mix = df_filtered.groupby(['customer_type', 'payment_method']).size().reset_index(name='order_volume')
         fig2 = px.bar(pay_mix, x='payment_method', y='order_volume', color='customer_type', 
                      barmode='group', text_auto=True,
-                     color_discrete_map={'new': CHARCOAL_STEAK, 'repeat': SUFRA_CRIMSON},
+                     color_discrete_map={'new': "#5D6D7E", 'repeat': SUFRA_CRIMSON},
                      title="2. Preferred Settlement Frameworks Across Target Cohorts",
                      labels={'order_volume': 'Total Processed Transactions', 'payment_method': 'Payment Framework', 'customer_type': 'Cohort'})
         fig2.update_traces(textposition='outside', cliponaxis=False)
@@ -265,7 +268,7 @@ elif page == "👥 Target Customer Insights":
             values=device_mix['count'],
             textinfo='label+percent',
             textposition='outside',
-            marker=dict(colors=[SUFRA_CRIMSON, SAFFRON_GOLD, CHARCOAL_STEAK], line=dict(color='#ffffff', width=2))
+            marker=dict(colors=[SUFRA_CRIMSON, SAFFRON_GOLD, "#5D6D7E"], line=dict(color=CARD_BG, width=2))
         )])
         fig4.update_layout(title="4. Ecosystem Access Device Point Proportions")
         fig4 = apply_board_theme(fig4)
@@ -286,23 +289,28 @@ elif page == "📈 Operational Velocities":
     
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
     with kpi1:
-        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#757575; font-weight:600;'>5. AVG DELIVERY TIME</p><h2 style='margin:5px 0; color:{CHARCOAL_STEAK};'>{avg_del_time:.1f} Mins</h2></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#94A3B8; font-weight:600;'>5. AVG DELIVERY TIME</p><h2 style='margin:5px 0; color:{TEXT_MAIN};'>{avg_del_time:.1f} Mins</h2></div>", unsafe_allow_html=True)
     with kpi2:
-        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#757575; font-weight:600;'>8. SUCCESS DELIVERY RATE</p><h2 style='margin:5px 0; color:{MINT_GARNISH};'>{success_rate:.2f}%</h2></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#94A3B8; font-weight:600;'>8. SUCCESS DELIVERY RATE</p><h2 style='margin:5px 0; color:{MINT_GARNISH};'>{success_rate:.2f}%</h2></div>", unsafe_allow_html=True)
     with kpi3:
-        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#757575; font-weight:600;'>8. REFUNDED ORDER RATE</p><h2 style='margin:5px 0; color:{SAFFRON_GOLD};'>{refunded_rate:.2f}%</h2></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#94A3B8; font-weight:600;'>8. REFUNDED ORDER RATE</p><h2 style='margin:5px 0; color:{SAFFRON_GOLD};'>{refunded_rate:.2f}%</h2></div>", unsafe_allow_html=True)
     with kpi4:
-        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#757575; font-weight:600;'>8. CANCELLATION RATE</p><h2 style='margin:5px 0; color:{SUFRA_CRIMSON};'>{cancelled_rate:.2f}%</h2></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='board-card'><p style='margin:0; font-size:12px; color:#94A3B8; font-weight:600;'>8. CANCELLATION RATE</p><h2 style='margin:5px 0; color:{SUFRA_CRIMSON};'>{cancelled_rate:.2f}%</h2></div>", unsafe_allow_html=True)
     
+    # 🌟 FIXED: Removed raw HTML style text string from rendering as plain text!
     st.markdown("<div class='board-card'>", unsafe_allow_html=True)
-    st.markdown("### 🍽 *6. Market Demand Preference & Cuisine Performance Leader*")
+    st.markdown("### 🍽️ 6. Market Demand Preference & Cuisine Performance Leader")
     rest_perf = df_filtered.groupby(['restaurant_name', 'cuisine']).agg(
         total_orders=('order_id', 'count'),
         avg_overall_rating=('rating', 'mean')
     ).reset_index().sort_values(by='total_orders', ascending=False)
     
     top_merchant = rest_perf.iloc[0]
-    st.markdown(f"**Top Customer Preferred Merchant:** The platform establishment displaying peak demand is <b style='color:{SUFRA_CRIMSON};'>{top_merchant['restaurant_name'].upper()}</b> serving <b style='color:{CHARCOAL_STEAK};'>{top_merchant['cuisine'].upper()}</b> culinary profiles, capturing <b style='color:{MINT_GARNISH};'>{top_merchant['total_orders']:,}</b> completed orders.")
+    st.markdown(
+        f"**Top Customer Preferred Merchant:** The platform establishment displaying peak demand is "
+        f"**{top_merchant['restaurant_name'].upper()}** serving **{top_merchant['cuisine'].upper()}** "
+        f"culinary profiles, capturing **{top_merchant['total_orders']:,}** completed orders."
+    )
     st.markdown("</div>", unsafe_allow_html=True)
     
     st.markdown("<div class='board-card'>", unsafe_allow_html=True)
@@ -358,7 +366,7 @@ elif page == "💰 Net Financial Performance":
         day_peaks = df_filtered.groupby(['day_of_week', 'customer_type']).size().reset_index(name='orders')
         fig_day = px.bar(day_peaks, x='day_of_week', y='orders', color='customer_type', 
                          barmode='group', text_auto=True,
-                         color_discrete_map={'new': CHARCOAL_STEAK, 'repeat': SAFFRON_GOLD},
+                         color_discrete_map={'new': "#5D6D7E", 'repeat': SAFFRON_GOLD},
                          title="10. Weekly Transaction Patterns Segregated by Customer Type")
         fig_day.update_traces(textposition='outside', cliponaxis=False)
         fig_day = apply_board_theme(fig_day)
@@ -375,5 +383,9 @@ elif page == "💰 Net Financial Performance":
     ).reset_index().sort_values(by='usages', ascending=False)
     
     st.dataframe(promo_perf.style.format({'total_discount_borne': '{:,.2f} AED', 'usages': '{:,}', 'acquired_new_users': '{:,}'}), use_container_width=True)
-    st.write("💡 *Strategic Sales Insight:* Keep marketing expenditure anchored on promo codes where the `acquired_new_users` output is steep. If high voucher volumes map to a flat acquisition curve, the campaign is simply eroding net profit by subsidizing natural, repeat customer behavior.")
+    st.markdown(
+        "💡 **Strategic Sales Insight:** Keep marketing expenditure anchored on promo codes where the "
+        "`acquired_new_users` output is steep. If high voucher volumes map to a flat acquisition curve, "
+        "the campaign is simply eroding net profit by subsidizing natural, repeat customer behavior."
+    )
     st.markdown("</div>", unsafe_allow_html=True)
