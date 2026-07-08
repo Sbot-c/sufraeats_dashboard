@@ -278,10 +278,10 @@ elif page == "👥 Target Customer Insights":
         st.markdown("<div class='board-card'>", unsafe_allow_html=True)
         pay_mix = df_filtered.groupby(['customer_type', 'payment_method']).size().reset_index(name='order_volume')
         fig2 = px.bar(pay_mix, x='payment_method', y='order_volume', color='customer_type', 
-                     barmode='group', text_auto=True,
-                     color_discrete_map={'new': "#5D6D7E", 'repeat': SUFRA_CRIMSON},
-                     title="2. Preferred Settlement Frameworks Across Target Cohorts",
-                     labels={'order_volume': 'Total Processed Transactions', 'payment_method': 'Payment Framework', 'customer_type': 'Cohort'})
+                      barmode='group', text_auto=True,
+                      color_discrete_map={'new': "#5D6D7E", 'repeat': SUFRA_CRIMSON},
+                      title="2. Preferred Settlement Frameworks Across Target Cohorts",
+                      labels={'order_volume': 'Total Processed Transactions', 'payment_method': 'Payment Framework', 'customer_type': 'Cohort'})
         fig2.update_traces(textposition='outside', cliponaxis=False)
         fig2 = apply_board_theme(fig2)
         st.plotly_chart(fig2, use_container_width=True)
@@ -300,6 +300,7 @@ elif page == "👥 Target Customer Insights":
         fig4.update_layout(title="4. Ecosystem Access Device Point Proportions")
         fig4 = apply_board_theme(fig4)
         st.plotly_chart(fig4, use_container_width=True)
+        st.sidebar.markdown("---")
         st.markdown("</div>", unsafe_allow_html=True)
 
 # ==========================================
@@ -338,6 +339,46 @@ elif page == "📈 Operational Velocities":
         f"culinary profiles, capturing **{top_merchant['total_orders']:,}** completed orders."
     )
     st.markdown("</div>", unsafe_allow_html=True)
+
+    # 🌟 EXPANDED SECTION: CUISINE PERFORMANCE ANALYSIS
+    st.markdown("---")
+    st.markdown("### 🍽️ Multi-Dimensional Cuisine Yield & Satisfaction Analysis")
+    
+    col_c1, col_c2 = st.columns([1, 1])
+    with col_c1:
+        st.markdown("<div class='board-card'>", unsafe_allow_html=True)
+        cuisine_metrics = df_filtered.groupby('cuisine').agg(
+            volume=('order_id', 'count'),
+            score=('rating', 'mean')
+        ).reset_index().sort_values(by='volume', ascending=False)
+        
+        fig_cuis_deep = px.bar(
+            cuisine_metrics, x='cuisine', y='volume', color='score',
+            labels={'volume': 'Total Captured Orders', 'cuisine': 'Cuisine Grouping', 'score': 'Rating Index'},
+            title="Cuisine Order Throughput Volumetrics vs Customer Sentiment Matrix",
+            color_continuous_scale=[SUFRA_CRIMSON, MINT_GARNISH]
+        )
+        fig_cuis_deep = apply_board_theme(fig_cuis_deep)
+        st.plotly_chart(fig_cuis_deep, use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+    with col_c2:
+        st.markdown("<div class='board-card'>", unsafe_allow_html=True)
+        st.markdown("#### Comprehensive Cuisine Operations Matrix")
+        cuisine_ledger = df_filtered.groupby('cuisine').agg(
+            total_orders=('order_id', 'count'),
+            avg_basket_value=('basket_value', 'mean'),
+            net_profit_yield=('net_profit', 'sum'),
+            avg_rating=('rating', 'mean')
+        ).reset_index().sort_values(by='net_profit_yield', ascending=False)
+        
+        st.dataframe(cuisine_ledger.style.format({
+            'total_orders': '{:,}',
+            'avg_basket_value': '{:,.2f} AED',
+            'net_profit_yield': '{:,.2f} AED',
+            'avg_rating': '{:.2f} ⭐'
+        }), use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
     
     st.markdown("<div class='board-card'>", unsafe_allow_html=True)
     st.markdown("#### 11. Complete Multi-Tiered Restaurant Ratings Matrix (By Cohort Type)")
@@ -381,8 +422,8 @@ elif page == "💰 Net Financial Performance":
         st.markdown("<div class='board-card'>", unsafe_allow_html=True)
         hourly_peaks = df_filtered.groupby('hour').size().reset_index(name='orders')
         fig_hr = px.line(hourly_peaks, x='hour', y='orders', markers=True, 
-                        line_shape='spline', color_discrete_sequence=[SUFRA_CRIMSON],
-                        title="10. Diurnal Distribution: Peak Daily Delivery Demand Curves")
+                         line_shape='spline', color_discrete_sequence=[SUFRA_CRIMSON],
+                         title="10. Diurnal Distribution: Peak Daily Delivery Demand Curves")
         fig_hr.update_layout(xaxis=dict(tickmode='linear', tick0=0, dtick=2))
         fig_hr = apply_board_theme(fig_hr)
         st.plotly_chart(fig_hr, use_container_width=True)
@@ -424,4 +465,21 @@ elif page == "💰 Net Financial Performance":
         "the campaign in that zone is simply degrading profit margins by subsidizing existing repeat customer behavior "
         "rather than scaling new market pipelines."
     )
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    # 🌟 EXPANDED SECTION: GEOGRAPHIC & CHRONOLOGICAL PROMO CODE TIMELINE TRACTION
+    st.markdown("<div class='board-card'>", unsafe_allow_html=True)
+    st.markdown("### 🎟️ Chronological Voucher Lifecycle Pipeline Tracking Matrix (By Zone & Month)")
+    
+    promo_time_matrix = df_filtered[df_filtered['promo_code'] != 'no promo'].groupby(['zone', 'month_num', 'month', 'promo_code']).agg(
+        volume_utilized=('order_id', 'count'),
+        subsidy_costs=('discount_amount', 'sum'),
+        net_profit_margin=('net_profit', 'sum')
+    ).reset_index().sort_values(by=['zone', 'month_num', 'volume_utilized'], ascending=[True, True, False]).drop(columns=['month_num'])
+    
+    st.dataframe(promo_time_matrix.style.format({
+        'volume_utilized': '{:,}',
+        'subsidy_costs': '{:,.2f} AED',
+        'net_profit_margin': '{:,.2f} AED'
+    }), use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
